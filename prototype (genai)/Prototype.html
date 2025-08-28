@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Advanced Career & Skills Advisor with Google Gemini AI</title>
+  <style>
+    /* --- Reset & base --- */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      color: #20232a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      background: #6a1b9a;
+      width: 100%;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 6px rgba(106,27,154,0.3);
+    }
+    main {
+      max-width: 900px;
+      width: 100%;
+      background: white;
+      margin: 40px 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      font-size: 16px;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1.8px solid #ccc;
+      transition: border-color 0.3s ease;
+      resize: vertical;
+    }
+    textarea:focus, input[type="text"]:focus {
+      border-color: #6a1b9a;
+      outline: none;
+    }
+    button {
+      display: inline-block;
+      background-color: #6a1b9a;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 6px 15px rgba(106,27,154,0.3);
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #4a148c;
+    }
+    .section {
+      margin-top: 30px;
+    }
+    .section h2 {
+      margin-bottom: 24px;
+      border-bottom: 2px solid #6a1b9a;
+      display: inline-block;
+      padding-bottom: 6px;
+      font-weight: 700;
+      color: #4a148c;
+    }
+    .career-card {
+      background: #fafafa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgb(191 133 255 / 0.15);
+      transition: transform 0.3s ease;
+    }
+    .career-card:hover {
+      transform: translateY(-5px);
+    }
+    .career-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #6a1b9a;
+      margin-bottom: 10px;
+    }
+    .skills-list, .missing-skills-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 8px 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .skills-list li, .missing-skills-list li {
+      background-color: #e1bee7;
+      color: #4a148c;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin: 4px 10px 4px 0;
+      font-size: 14px;
+    }
+    .missing-skills-list li {
+      background-color: #ef9a9a;
+      color: #b71c1c;
+    }
+    /* Chat UI */
+    .chat-container {
+      max-width: 700px;
+      background: #fff;
+      margin-top: 40px;
+      border-radius: 8px;
+      box-shadow: 0 12px 24px rgb(106 27 154 / 0.15);
+      padding: 20px;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+    .messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+      margin-bottom: 15px;
+    }
+    .message {
+      margin-bottom: 15px;
+      max-width: 80%;
+      word-wrap: break-word;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 15px;
+      line-height: 1.3;
+      box-shadow: 0 2px 8px rgb(106 27 154 / 0.1);
+    }
+    .user-message {
+      background-color: #6a1b9a;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .bot-message {
+      background-color: #f0e6ff;
+      color: #4a148c;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+    .input-area input {
+      flex-grow: 1;
+      font-size: 16px;
+      padding: 12px;
+      border-radius: 24px;
+      border: 1.5px solid #6a1b9a;
+    }
+    .loading {
+      font-style: italic;
+      color: #999;
+      text-align: center;
+      padding: 8px 0;
+    }
+  </style>
+</head>
+<body>
+
+<header>Advanced Career & Skills Advisor</header>
+
+<main>
+  
+  <section>
+    <label for="skillsInput">Enter your skills (comma separated):</label>
+    <textarea id="skillsInput" placeholder="Example: Python, SQL, User Research"></textarea>
+    <button id="analyzeSkillsBtn">Analyze & Get Career Suggestions</button>
+  </section>
+
+  <section id="careerSuggestions" class="section">
+    <h2>Career Suggestions & Skill Gap Analysis</h2>
+    <div id="careersContainer"></div>
+  </section>
+
+  <section class="section">
+    <h2>AI Mentor Chat (Powered by Google Gemini)</h2>
+    <div class="chat-container">
+      <div class="messages" id="chatMessages"></div>
+      <div class="input-area">
+        <input id="chatInput" type="text" placeholder="Ask me about careers, learning or resume tips..." />
+        <button id="chatSendBtn">Send</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  // Replace with your real API key (For demonstration only! Use server proxy in production)
+  const GEMINI_API_KEY = "AIzaSyCxmPdp3qG5zpxcaxPLSL_qSqF_gBXn3Wg";
+
+  // Predefined career data (can be enhanced)
+  const CAREERS = {
+    "Data Scientist": ["Python", "Statistics", "Machine Learning", "Data Visualization"],
+    "UX Designer": ["Design Thinking", "User Research", "Wireframing", "Prototyping"],
+    "Software Engineer": ["Python", "Algorithms", "Data Structures", "System Design"],
+    "Product Manager": ["Roadmapping", "Stakeholder Management", "Agile", "Analytics"],
+    "Digital Marketer": ["SEO", "Content Creation", "Google Analytics", "Social Media"]
+  };
+
+  const analyzeBtn = document.getElementById("analyzeSkillsBtn");
+  const skillsInput = document.getElementById("skillsInput");
+  const careersContainer = document.getElementById("careersContainer");
+
+  const chatMessages = document.getElementById("chatMessages");
+  const chatInput = document.getElementById("chatInput");
+  const chatSendBtn = document.getElementById("chatSendBtn");
+
+  // Utility to create skill tags
+  function createSkillTags(skills, className) {
+    const ul = document.createElement("ul");
+    ul.className = className;
+    skills.forEach(skill => {
+      const li = document.createElement("li");
+      li.textContent = skill;
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+
+  // Function: Skill Gap Analysis & Career Suggestion
+  function analyzeSkills(userSkills) {
+    const careers = [];
+
+    for (const careerName in CAREERS) {
+      const careerSkills = CAREERS[careerName];
+      const missingSkills = careerSkills.filter(s => !userSkills.includes(s.toLowerCase()));
+      careers.push({
+        careerName,
+        requiredSkills: careerSkills,
+        missingSkills
+      });
+    }
+
+    // Sort careers by fewest missing skills
+    careers.sort((a, b) => a.missingSkills.length - b.missingSkills.length);
+    return careers;
+  }
+
+  // Render careers recommendations UI
+  function renderCareerSuggestions(careers) {
+    careersContainer.innerHTML = "";
+    careers.forEach(({careerName, requiredSkills, missingSkills}) => {
+      const card = document.createElement("div");
+      card.className = "career-card";
+
+      const title = document.createElement("h3");
+      title.className = "career-name";
+      title.textContent = careerName;
+
+      const reqLabel = document.createElement("div");
+      reqLabel.textContent = "Required Skills:";
+      const reqSkillsUL = createSkillTags(requiredSkills, "skills-list");
+
+      const missLabel = document.createElement("div");
+      missLabel.textContent = "Missing Skills:";
+      const missingSkillsUL = createSkillTags(missingSkills.length ? missingSkills : ["None! You're ready!"], "missing-skills-list");
+
+      card.appendChild(title);
+      card.appendChild(reqLabel);
+      card.appendChild(reqSkillsUL);
+      card.appendChild(missLabel);
+      card.appendChild(missingSkillsUL);
+
+      careersContainer.appendChild(card);
+    });
+  }
+
+  analyzeBtn.onclick = () => {
+    const rawSkills = skillsInput.value.trim();
+    if (!rawSkills) {
+      alert("Please enter your skills");
+      return;
+    }
+
+    const userSkills = rawSkills.split(",").map(s => s.trim().toLowerCase());
+    const careers = analyzeSkills(userSkills);
+    renderCareerSuggestions(careers);
+  }
+
+  // --- Google Gemini API Chat Utility ---
+
+  // Append message to chat
+  function appendMessage(content, fromBot = true) {
+    const msg = document.createElement("div");
+    msg.className = fromBot ? "message bot-message" : "message user-message";
+    msg.textContent = content;
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  async function callGeminiAPI(promptText) {
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+    const body = {
+      "contents": [{ "parts": [{ "text": promptText }] }]
+    };
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': GEMINI_API_KEY
+        },
+        method: 'POST',
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error.message || 'API error');
+      }
+
+      const data = await response.json();
+      // Gemini API returns text like this:
+      // data.candidates[0].content.parts[0].text
+      const message = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      return message || "Sorry, I couldn't generate a response.";
+    } catch (err) {
+      return "Error: " + err.message;
+    }
+  }
+
+  // On Chat Send
+  chatSendBtn.onclick = async () => {
+    const userText = chatInput.value.trim();
+    if (!userText) return;
+
+    appendMessage(userText, false);
+    chatInput.value = "";
+    appendMessage("Thinking...", true);
+
+    const botResponse = await callGeminiAPI(userText);
+
+    // Remove the 'Thinking...' message and add real response
+    chatMessages.querySelector(".bot-message:last-child").remove();
+    appendMessage(botResponse, true);
+  }
+
+  // Enable sending chat on Enter key
+  chatInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      chatSendBtn.click();
+    }
+  });
+
+</script>
+
+</body>
+</html>
