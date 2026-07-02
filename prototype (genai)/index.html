@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NEO INVADERS: ECLIPSE</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="ui-layer" class="ui-screen">
+            <div id="main-menu" class="screen-content active">
+                <h1 class="glitch-text" data-text="NEO INVADERS">NEO INVADERS</h1>
+                <h3 class="subtitle">ECLIPSE PROTOCOL</h3>
+                <div class="menu-buttons">
+                    <button id="btn-play" class="btn-primary">START MISSION</button>
+                    <button id="btn-settings" class="btn-secondary">SYSTEM SETTINGS</button>
+                    <button id="btn-achievements" class="btn-secondary">ACHIEVEMENTS</button>
+                    <button id="btn-credits" class="btn-secondary">LOGS & CREDITS</button>
+                </div>
+            </div>
+
+            <div id="settings-menu" class="screen-content hidden">
+                <h2>SYSTEM CONFIGURATION</h2>
+                <div class="settings-grid">
+                    <div class="setting-row">
+                        <label>DIFFICULTY</label>
+                        <select id="setting-difficulty">
+                            <option value="easy">EASY (RECON)</option>
+                            <option value="normal" selected>NORMAL (VETERAN)</option>
+                            <option value="hard">HARD (ELITE)</option>
+                            <option value="nightmare">NIGHTMARE (DOOM)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label>MUSIC VOLUME</label>
+                        <input type="range" id="volume-music" min="0" max="1" step="0.1" value="0.7">
+                    </div>
+                    <div class="setting-row">
+                        <label>SFX VOLUME</label>
+                        <input type="range" id="volume-sfx" min="0" max="1" step="0.1" value="0.8">
+                    </div>
+                    <div class="setting-row">
+                        <label>GRAPHICS MODE</label>
+                        <select id="setting-graphics">
+                            <option value="high" selected>ULTRA (BLOOM)</option>
+                            <option value="low">PERFORMANCE</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label>ACCESSIBILITY</label>
+                        <button id="btn-high-contrast" class="btn-toggle">HIGH CONTRAST: OFF</button>
+                    </div>
+                </div>
+                <button id="btn-settings-back" class="btn-secondary back-btn">BACK TO BRIDGE</button>
+            </div>
+
+            <div id="achievements-menu" class="screen-content hidden">
+                <h2>ACCOLADES & MILESTONES</h2>
+                <div id="achievements-container" class="scrollable-panel"></div>
+                <button id="btn-achievements-back" class="btn-secondary back-btn">BACK</button>
+            </div>
+
+            <div id="hud" class="hidden">
+                <div class="hud-top-left">
+                    <div class="hud-item"><span class="label">SCORE:</span> <span id="hud-score" class="value">000000</span></div>
+                    <div class="hud-item"><span class="label">COMBO:</span> <span id="hud-combo" class="value">x1.0</span></div>
+                </div>
+                <div class="hud-top-right">
+                    <div class="hud-item"><span class="label">FPS:</span> <span id="hud-fps" class="value">60</span></div>
+                    <div class="hud-item"><span class="label">WEAPON:</span> <span id="hud-weapon" class="value">LASER BEAM</span></div>
+                </div>
+                <div class="hud-bottom-left">
+                    <div class="hud-health-bar-container">
+                        <div id="hud-health-fill" class="hud-health-bar-fill"></div>
+                    </div>
+                    <div id="hud-lives-container"></div>
+                </div>
+            </div>
+
+            <div id="pause-menu" class="screen-content hidden">
+                <h2 class="neon-text">TACTICAL PAUSE</h2>
+                <div class="menu-buttons">
+                    <button id="btn-resume" class="btn-primary">RESUME FLIGHT</button>
+                    <button id="btn-restart" class="btn-secondary">RESTART OPERATIONAL GRID</button>
+                    <button id="btn-quit" class="btn-secondary">ABANDON MISSION</button>
+                </div>
+            </div>
+
+            <div id="game-over-menu" class="screen-content hidden">
+                <h1 class="dead-text">HULL CRITICAL: DESTROYED</h1>
+                <div class="stats-summary">
+                    <p>FINAL SCORE: <span id="summary-score">0</span></p>
+                    <p>ACCURACY: <span id="summary-accuracy">0%</span></p>
+                    <p>ELIMINATIONS: <span id="summary-kills">0</span></p>
+                </div>
+                <div class="menu-buttons">
+                    <button id="btn-gameover-restart" class="btn-primary">REDEPLOY</button>
+                    <button id="btn-gameover-quit" class="btn-secondary">RETURN TO MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-controls" class="hidden">
+            <div id="joystick-zone"></div>
+            <button id="btn-mobile-fire" class="fire-btn">FIRE</button>
+        </div>
+    </div>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
